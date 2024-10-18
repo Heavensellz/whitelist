@@ -244,7 +244,7 @@ end
 	setfpscap(15)
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/MsorkyScripts/OpenSourceAntiCheat/main/AntiCheatBypass.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Heavensellz/whitelist/refs/heads/main/smthihaveno"))()
 getgenv().Executed = true
 
 --// Code --//
