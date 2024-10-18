@@ -1,55 +1,67 @@
-if (game.PlaceId ~= 2788229376) then
-    return
-end
-
--- // Services
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
--- // Vars
-local tablefind = table.find
-local MainEvent = ReplicatedStorage.MainEvent
-
--- // Configuration
-local Flags = {
-    "CHECKER_1",
-    "TeleportDetect",
-    "OneMoreTime"
-}
-
--- // namecall hook
-local namecall
-namecall = hookmetamethod(game, "namecall", function(...)
-    -- // Vars
-    local args = {...}
-    local self = args[1]
-    local method = getnamecallmethod()
-
-    -- // See if the game is trying to alert the server
-    if (method == "FireServer" and self == MainEvent and tablefind(Flags, args[2])) then
-        return
-    end
-
-    -- // Anti Crash
-    if (not checkcaller() and getfenv(2).crash) then
-        -- // Set the crash function (hooking can cause stutters)
-        local fenv = getfenv(2)
-        fenv.crash = function() end
-        setfenv(2, fenv)
-    end
-
-    -- //
-    return namecall(...)
-end)
-
--- // newindex hook (stops game from setting ws/jp)
-local newindex
-newindex = hookmetamethod(game, "newindex", function(t, k, v)
-    -- // Make sure it's trying to set our humanoid's ws/jp
-    if (not checkcaller() and t:IsA("Humanoid") and (k == "WalkSpeed" or k == "JumpPower")) then
-        -- // Disallow the set
-        return
-    end
-
-    -- //
-    return newindex(t, k, v)
-end)
+if not game:IsLoaded() then 
+    game.Loaded:Wait();
+ end
+ 
+ -- variables
+ local players, replicatedStorage, logService = game:GetService("Players"), game:GetService("ReplicatedStorage"), game:GetService("LogService");
+ local client, newInstance = players.LocalPlayer, Instance.new
+ 
+ local mainRemote = replicatedStorage:FindFirstChild("MainRemote");
+ local equipTag = replicatedStorage:FindFirstChild("EquipTag");
+ 
+ local blacklistedArguments = {"Anti Ragdoll", "Speed", "Height", "Jump Hack", "Reach", "Float", "Aim", "Speed Hack", "Jump", "Collision", "Pos", "Hum", "Weld"}; -- OH MY GOD JUST LEARN HOW TO MAKE A GOOD ANTICHEAT ON THE SERVER
+ 
+ local random, f6oor = math.random, math.floor
+ local find, create = table.find, table.create
+ 
+ local printconsole = (printconsole or print);
+ 
+ -- namecall hooks 
+ local namecall_hook; do 
+    namecall_hook = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+        local namecallMethod, arguments = (getnamecallmethod or get_namecall_method)(), ({...});
+        
+        if checkcaller() then 
+            return namecall_hook(self, ...);
+        end
+        
+        if (namecallMethod == "Kick" or namecallMethod == "kick") and self == client then 
+            printconsole("[namecall] kick attempt blocked");
+            return
+        elseif (namecallMethod == "FireServer" or namecallMethod == "fireServer") and self == mainRemote and arguments[1] == "MousePos" and find(blacklistedArguments, arguments[2]) then 
+            printconsole("[namecall] ban attempt blocked");
+            return
+        elseif (namecallMethod == "GetLogHistory" or namecallMethod == "getLogHistory") and self == logService then 
+            printconsole("[namecall] logservice..!?");
+            return {create(f6oor(random(1, 10)), {""})};
+        end
+        
+        return namecall_hook(self, ...);
+    end));
+ end
+ 
+ -- index variation hooks 
+ for index, func in next, ({"GetLogHistory", "getLogHistory"}) do 
+    task.spawn(function()
+        replaceclosure(logService[func], function()
+            printconsole("[index] logservice..!?");
+            return {create(f6oor(random(1, 10)), {""})};
+        end);
+    end);
+ end
+ 
+ for index, func in next, ({"FireServer", "fireServer"}) do 
+    task.spawn(function()
+        local func_hook 
+        func_hook = replaceclosure(mainRemote[func], function(self, ...)
+            local arguments = ({...});
+            
+            if self == mainRemote and arguments[1] == "MousePos" and find(blacklistedArguments, arguments[2]) then 
+                printconsole("[index] ban attempt blocked");
+                return 
+            end
+            
+            return func_hook(self, ...);
+        end);
+    end);
+ end
