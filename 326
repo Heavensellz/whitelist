@@ -506,7 +506,7 @@ local function Setup(Type, Debugmode)
             for i = 1, steps do
                 local newCFrame = currentCFrame:Lerp(position, i / steps)
                 humanoidRootPart.CFrame = newCFrame
-                task.wait(0.01) -- Adjust the wait time as needed
+                task.wait(0.1) -- Adjust the wait time as needed
             end
         end
     else
