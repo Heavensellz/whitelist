@@ -46,7 +46,7 @@ if Testing == false then
 	Frame.Parent = ScreenGui
 	Frame.Active = true
 	Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-	Frame.BackgroundColor3 = Color3.fromRGB(55, 95, 100)
+	Frame.BackgroundColor3 = Color3.fromRGB(55, 100, 57)
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Frame.BorderSizePixel = 0
 	Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -171,7 +171,7 @@ if Testing == false then
 	WalletFrame.Active = false
 	WalletFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	WalletFrame.BackgroundColor3 = Color3.fromRGB(79, 139, 77)
-	WalletFrame.BorderColor3 = Color3.fromRGB(26, 45, 45)
+	WalletFrame.BorderColor3 = Color3.fromRGB(28, 45, 26)
 	WalletFrame.BorderSizePixel = 0
 	WalletFrame.Position = UDim2.new(0.5, 0.5, 0.66)
 	WalletFrame.Size = UDim2.new(0, 523, 0, 78)
@@ -281,35 +281,6 @@ local function Drop(Type)
 		CmdSettings["Dropping"] = nil
 		CmdSettings["CustomDrop"] = nil
 	end
-end
-
-local function grave(Type)
-	if CmdSettings["Grave"] == nil and Type == true then
-		local BP = Variables["Player"].Character.HumanoidRootPart:FindFirstChild("GraveBP")
-		if BP then
-			BP:Destroy()
-		end
-		CmdSettings["Grave"] = true
-		
-		local humanoidRootPart = Variables["Player"].Character.HumanoidRootPart
-		humanoidRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(0, -7, 0)
-		humanoidRootPart.CanCollide = false
-		
-		local BP = Instance.new("BodyPosition", humanoidRootPart)
-		BP.Name = "GraveBP"
-		BP.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-		BP.Position = humanoidRootPart.Position
-		
-		elseif CmdSettings["Grave"] == true and Type == false then
-			CmdSettings["Grave"] = nil
-			local BP = Variables["Player"].Character.HumanoidRootPart:FindFirstChild("GraveBP")
-			if BP then
-				BP:Destroy()
-			end
-			local humanoidRootPart = Variables["Player"].Character.HumanoidRootPart
-			humanoidRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(0, 5, 0)
-			humanoidRootPart.CanCollide = true 
-		end
 end
 
 local function block(type)
