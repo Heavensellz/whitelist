@@ -121,7 +121,7 @@ if Testing == false then
 	UICorner_3.CornerRadius = UDim.new(0.400000006, 0)
 	UICorner_3.Parent = Frame_2
 	
-	UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(122, 168, 170)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(122, 168, 170))}
+	UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(122, 170, 130)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(122, 170, 125))}
 	UIGradient.Offset = Vector2.new(0, 9)
 	UIGradient.Parent = Frame_2
 	
@@ -488,7 +488,7 @@ local function Setup(Type, Debugmode)
 			local humanoidRootPart = Variables["Player"].Character.HumanoidRootPart
             local currentCFrame = humanoidRootPart.CFrame
             local distance = (position.p - currentCFrame.p).Magnitude
-            local steps = math.floor(distance / 10) -- Adjust the step size as needed
+            local steps = math.floor(distance / 5) -- Adjust the step size as needed
             local stepSize = distance / steps
 
             for i = 1, steps do
